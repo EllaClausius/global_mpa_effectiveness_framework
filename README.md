@@ -205,7 +205,7 @@ In summary:
    * live_coral: total percent cover of live hard corals recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.
   
   ## Code & software 
-Six R script files are provided to reproduce the analysis in the corresponding manuscript. All provided R files are described below.
+Two R script files are provided to reproduce the analysis in the corresponding manuscript. All provided R files are described below.
 
 * '00_packages_functions.R': R source code installing necessary packages and defining required functions. 
 
