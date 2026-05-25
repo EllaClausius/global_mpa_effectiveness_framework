@@ -60,7 +60,7 @@ Typical Install Time
 1–2 minutes on a standard desktop computer with internet access.
 
 ## Performance Considerations
-One script in the package, XXXX, performs model fitting and training across multiple ecological indicators. This script is computationally intensive and has been designed to support parallel execution across multiple CPU cores to reduce runtime.
+One script in the package, main_framework_analysis.R, performs model fitting and training across multiple ecological indicators. This script is computationally intensive and has been designed to support parallel execution across multiple CPU cores to reduce runtime.
 
 Key Notes:
 
@@ -81,14 +81,17 @@ An example parallel setup is provided in the script documentation.
 ### DATA & FILE OVERVIEW 
 
 File List: 
-File 1 Name: 
-File 1 Description: 
+File 1 Name: path_scores_final.csv
+File 1 Description: A dataset of interaction strengths between ProtectedSeas marine activities and 6 ecolosystem groups, used to assess pathways of potential ecological impacts from activity restrictions in marine protected areas.  
 
-File 2 Name: 
-File 2 Description: 
+File 2 Name: protected_seas_activity_restrictions.csv
+File 2 Description: A dataset of ProtectedSeas sites with scores for each of 34 activity restrictions used to evaluate core pathways for impact across the global marine protected area network. 
 
-File 3 Name: 
-File 3 Description: 
+File 3 Name: rf_training_data.csv
+File 3 Description: Ecological indicator values and socioeconimc, anthropogenic pressure, and broadscale environmental data for 2,241 opnely fished shallow Reef Life Survey (RLS) sites.
+
+File 4 Name: rf_effect_size_prediction_data.csv
+File 4 Description: Ecological indicator values and socioeconimc, anthropogenic pressure, MPA factor, and broadscale environmental data for 2,290 opnely fished shallow Reef Life Survey (RLS) sites inside marine protected areas (MPAs), used to estimate MPA effects across a range of ecological indicators. 
 
 
 ## Methodological Information
@@ -113,15 +116,33 @@ In summary:
 
 ---
 
-### DATA-SPECIFIC INFORMATION FOR: dfgdrg .Rdata 
-1. Number of variables:  
-2. Number of cases/rows:
+### DATA-SPECIFIC INFORMATION FOR: path_scores_final.csv
+1. Number of variables: 3 
+2. Number of cases/rows: 234 
 3. Variable list:
-   * rls_site_code: unique Reef Life Survey shallow reef site identifier
+  * source_node: Source node in the path analysis network.
+  * target_node: Target node connected to the source node in the path analysis network.
+  * weight: Relative strength of the connection between the source and target nodes.
+
+### DATA-SPECIFIC INFORMATION FOR: protected_seas_activity_restrictions.csv 
+1. Number of variables: 35  
+2. Number of cases/rows: 5607
+3. Variable list:
+   * site_id: Unique ProtectedSeas MPA site identifier.
+   * recreational_fishing - overflight_or_drones: Ordinal scores indicating the level of restriction for each activity (0 = unrestricted, 1 = partially restricted, 2 = prohibited).
+
+
+### DATA-SPECIFIC INFORMATION FOR: rf_training_data.csv
+1. Number of variables:  29
+2. Number of cases/rows: 2241 
+3. Variable list:
+   * site_code: unique Reef Life Survey shallow reef site identifier
    * latitude: latitude in decimal degrees of reef site
    * longitude: longitude in decimal degrees of reef site 
    * depth: mean depth in meters of survey transect
    * sst_mean: Mean sea surface temperature (SST) at the site over the two years preceding the date of survey
+   * sst_min: Minimum sea surface temperature (SST) at the site over the two years preceding the date of survey
+   * sst_max: Maximum sea surface temperature (SST) at the site over the two years preceding the date of survey
    * si_mean: silicate (mmol / m3)
    * par_mean_mean: photosynthetically available radiation (Em2/day).
    * chl_mean:  chlorophyll-a (mmol / m3)
@@ -133,22 +154,59 @@ In summary:
    * total_gravity: a measure of how large and far away a human population is to a given reef site, as detailed in Cinner et al., 2018.
    * gdp_per_capita: latest available gross domestic product (GFP) per capita of the country a reef site falls within
    * hdi: latest available human development index (HDI) score for the country a reef site falls within. 
-   * total_biomass_log: total reef fish biomass recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * large_fish_bio: biomass of reef fish 20 cm+ in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * large_fish_abund: total abundance of reef fish 20 cm+ in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * large_fish_richness: total species richness of all reef fish 20 cm+ in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.  
+   * small_fish_bio: biomass of reef fish < 20 cm in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * small_fish_abund: total abundance of reef fish < 20 cm in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * small_fish_richness: total species richness of all reef fish < 20 cm in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey. 
+   * cf_richness: total species richness of all cryptic reef fish recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey. 
+   * invert_richness: total species richness of all reef mobile macroinvertebrates recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey . 
+   * invert_abundance: total abundance of all mobile macroinvertebrates recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * kelp_cover: total percent cover of canopy-forming macroalgal kelps recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.
+   * live_coral: total percent cover of live hard corals recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.
 
 
-
-## Code & software 
+### DATA-SPECIFIC INFORMATION FOR: rf_effect_size_prediction_data.csv
+1. Number of variables:  32
+2. Number of cases/rows: 2290
+3. Variable list:
+   * site_code: unique Reef Life Survey shallow reef site identifier
+   * protected_seas_id: Unique ProtectedSeas MPA site identifier.
+   * level_fishing_protection: level of protection against fishing for the zone a given reef site falls within.
+   * compliance: the level of compliance against fishing recorded at the time of field surveys at each site.
+   * latitude: latitude in decimal degrees of reef site
+   * longitude: longitude in decimal degrees of reef site 
+   * depth: mean depth in meters of survey transect
+   * sst_mean: Mean sea surface temperature (SST) at the site over the two years preceding the date of survey
+   * sst_min: Minimum sea surface temperature (SST) at the site over the two years preceding the date of survey
+   * sst_max: Maximum sea surface temperature (SST) at the site over the two years preceding the date of survey
+   * si_mean: silicate (mmol / m3)
+   * par_mean_mean: photosynthetically available radiation (Em2/day).
+   * chl_mean:  chlorophyll-a (mmol / m3)
+   * no3_mean: nitrate (mmol / m3)
+   * po4_mean: phosphate (mmol / m3)
+   * kdpar_mean_mean: diffuse attenuation at the surface in meters.
+   * dfe_mean: iron (mmol / m3)
+   * phyc_mean: phytoplankton (mmol / m3)
+   * total_gravity: a measure of how large and far away a human population is to a given reef site, as detailed in Cinner et al., 2018.
+   * gdp_per_capita: latest available gross domestic product (GFP) per capita of the country a reef site falls within
+   * hdi: latest available human development index (HDI) score for the country a reef site falls within. 
+   * large_fish_bio: biomass of reef fish 20 cm+ in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * large_fish_abund: total abundance of reef fish 20 cm+ in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * large_fish_richness: total species richness of all reef fish 20 cm+ in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.  
+   * small_fish_bio: biomass of reef fish < 20 cm in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * small_fish_abund: total abundance of reef fish < 20 cm in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * small_fish_richness: total species richness of all reef fish < 20 cm in length recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey. 
+   * cf_richness: total species richness of all cryptic reef fish recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey. 
+   * invert_richness: total species richness of all reef mobile macroinvertebrates recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey . 
+   * invert_abundance: total abundance of all mobile macroinvertebrates recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey (log10 transformed).
+   * kelp_cover: total percent cover of canopy-forming macroalgal kelps recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.
+   * live_coral: total percent cover of live hard corals recorded using Underwater Visual Census methods at a given Reef Life Survey site on the last available survey.
+  
+  ## Code & software 
 Six R script files are provided to reproduce the analysis in the corresponding manuscript. All provided R files are described below.
 
 * '00_packages_functions.R': R source code installing necessary packages and defining required functions. 
 
-* '01_geographic_random_forest.R': R source code predicting total reef fish biomass across global shallow reef sites inside MPAs using G-computation and a geographic random forest (GRF) model of total reef fish biomass and 17 socioeconomic, anthropogenic pressure, and broad-scale enviornmental covariates. 
-
-* '02_mpa_random_forest.R': R source code calculating MPA effect sizes for 2,155 shallow reef MPA sites, and relating effect sizes to four MPA factor (compliance with restrictions, level of protection against fishing, MPA age, MPA size) using a non-spatial RF model. 
-
-* '03_global_mpa_effectiveness_predictions.R': R source code predicting  MPA effects across the global shallow reef-encompassing MPA network under four scenarios of MPA age and level of protection against fishing, assuming compliance is universally low or high. 
-
-* '04_Global_MPA_effect_size_density_plot2.R': R source code plotting density of MPA effects across the global shallow reef-encompassing MPA network under the four scenarios. 
-
-* '05_global_MPA_effectiveness_threshold_plot2.R': R source code plotting range in estimates of MPA effectiveness according to a series of biomass recovery thresholds, under the four scenarios of MPA age and level of protection against fishing. 
-
+* 'main_framework_analysis.R': R source code for main analysis, including hierearchcical cluster analysis, PCoA, and ecological effective sizes. 
