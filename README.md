@@ -84,8 +84,8 @@ File List:
 File 1 Name: path_scores_final.csv
 File 1 Description: A dataset of interaction strengths between ProtectedSeas marine activities and 6 ecolosystem groups, used to assess pathways of potential ecological impacts from activity restrictions in marine protected areas.  
 
-File 2 Name: protected_seas_activity_restrictions.csv
-File 2 Description: A dataset of ProtectedSeas sites with scores for each of 34 activity restrictions used to evaluate core pathways for impact across the global marine protected area network. 
+File 2 Name: protected_seas_activity_restrictions_cluster.csv
+File 2 Description: A dataset of ProtectedSeas sites with scores for each of 34 activity restrictions used to evaluate core pathways for impact across the global marine protected area network, including the cluster it was assigned through the hierarchical cluster analysis. 
 
 File 3 Name: rf_training_data.csv
 File 3 Description: Ecological indicator values and socioeconimc, anthropogenic pressure, and broadscale environmental data for 2,241 opnely fished shallow Reef Life Survey (RLS) sites.
@@ -124,12 +124,14 @@ In summary:
   * target_node: Target node connected to the source node in the path analysis network.
   * weight: Relative strength of the connection between the source and target nodes.
 
-### DATA-SPECIFIC INFORMATION FOR: protected_seas_activity_restrictions.csv 
-1. Number of variables: 35  
+### DATA-SPECIFIC INFORMATION FOR: protected_seas_activity_restrictions_cluster.csv 
+1. Number of variables: 37  
 2. Number of cases/rows: 5607
 3. Variable list:
    * site_id: Unique ProtectedSeas MPA site identifier.
    * recreational_fishing - overflight_or_drones: Ordinal scores indicating the level of restriction for each activity (0 = unrestricted, 1 = partially restricted, 2 = prohibited).
+   * cluster: the cluster ID the zone was assigned through Hierarchical cluster analysis.
+   * ecological_data_available: Whether the zone had ecological data and effect sizes available for shallow reef analysis. TRUE = ecological data available for the zone. 
 
 
 ### DATA-SPECIFIC INFORMATION FOR: rf_training_data.csv
